@@ -7,10 +7,11 @@ intents:
   - mood_unhappy
   - bot_challenge
   - capabilities
+  - thank
 
 responses:
   utter_greet:
-  - text: "Hey! How are you?"
+  - text: "Hello. I am Chappie"
 
   utter_cheer_up:
   - text: "Here is something to cheer you up:"
@@ -20,16 +21,19 @@ responses:
   - text: "Did that help you?"
 
   utter_happy:
-  - text: "Great, carry on!"
+  - text: "I'm glad to help!"
 
   utter_goodbye:
-  - text: "Bye"
+  - text: "Goodbye"
 
   utter_iamabot:
   - text: "I am Chappie. I am a chat bot here to assist you"
 
+  utter_welcome:
+  - text: "You are very welcome!"
+
   utter_capabilities:
-  - text: "I can chat with you"
+  - text: "I can chat with you, enter your time, or handle your documents"
 
 session_config:
   session_expiration_time: 60

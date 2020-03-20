@@ -33,3 +33,7 @@
 ## list capabilities
 * capabilities
   - utter_capabilities
+
+## thanks
+* thank
+  - utter_welcome

@@ -60,6 +60,11 @@
 - what is this?
 - who am I talking to?
 
+## intent:thank
+- thanks
+- thank you
+- i appreciate it
+
 ## intent:capabilities
 - what can you do?
 - what are you capable of?
