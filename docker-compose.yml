@@ -1,0 +1,9 @@
+version: '3'
+services:
+  chappie-bot:
+    build: .
+    environment: []
+    ports: []
+    volumes:
+      - './rasa:/app'
+    restart: unless-stopped
