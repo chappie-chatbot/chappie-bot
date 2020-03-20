@@ -54,3 +54,17 @@
 - are you a human?
 - am I talking to a bot?
 - am I talking to a human?
+- who are you?
+- what are you?
+- who is this?
+- what is this?
+- who am I talking to?
+
+## intent:capabilities
+- what can you do?
+- what are you capable of?
+- what are your capabilities?
+- what can I do?
+- what can I say?
+- help
+- can you help?

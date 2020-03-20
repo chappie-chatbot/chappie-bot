@@ -29,3 +29,7 @@
 ## bot challenge
 * bot_challenge
   - utter_iamabot
+
+## list capabilities
+* capabilities
+  - utter_capabilities

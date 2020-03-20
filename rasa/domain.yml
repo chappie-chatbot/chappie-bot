@@ -6,6 +6,7 @@ intents:
   - mood_great
   - mood_unhappy
   - bot_challenge
+  - capabilities
 
 responses:
   utter_greet:
@@ -25,7 +26,10 @@ responses:
   - text: "Bye"
 
   utter_iamabot:
-  - text: "I am a bot, powered by Rasa."
+  - text: "I am Chappie. I am a chat bot here to assist you"
+
+  utter_capabilities:
+  - text: "I can chat with you"
 
 session_config:
   session_expiration_time: 60
