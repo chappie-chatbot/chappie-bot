@@ -37,3 +37,11 @@
 ## thanks
 * thank
   - utter_welcome
+
+## time entry form
+* start
+    - time_entry_form                   <!--Run the time_entry_form action-->
+    - form{"name": "time_entry_form"}   <!--Activate the form-->
+    - form{"name": null}                <!--Deactivate the form-->
+    - utter_time_entry_summary
+    - action_clear_slots
