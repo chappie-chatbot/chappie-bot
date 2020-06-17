@@ -1,4 +1,5 @@
 **/.*
 /rasa/__pycache__/
 /rasa/models/
+/rasa/venv
 **/*.iml

@@ -1,16 +1,19 @@
-version: '3'
+version: '3.0'
 services:
   rasa-actions:
-    build: .
+    image: rasa/rasa:1.10.3-full
+    ports:
+      - 5055:5055
     volumes:
-      - './rasa:/app'
-    restart: unless-stopped
+      - ./rasa:/app
     entrypoint: rasa run actions
-  chappie-bot:
-    build: .
-    environment: []
+  rasa:
+    image: rasa/rasa:1.10.3-full
+    depends_on:
+      - rasa-actions
     ports:
       - 5005:5005
     volumes:
-      - './rasa:/app'
-    restart: unless-stopped
+      - ./rasa:/app
+    command:
+      - run

@@ -3,8 +3,10 @@
 #
 # See this guide on how to implement these action:
 # https://rasa.com/docs/rasa/core/actions/#custom-actions/
-
+import json
 from typing import Any, Text, Dict, List, Union
+
+import requests
 from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormAction
@@ -12,8 +14,6 @@ from rasa_sdk.events import AllSlotsReset
 
 # This is a simple example for a custom action which utters "Hello World!"
 
-#
-#
 #
 # class ActionHelloWorld(Action):
 #
@@ -28,19 +28,44 @@ from rasa_sdk.events import AllSlotsReset
 #
 #         return []
 
-class TimeEntryForm(FormAction):
-    """Collects sales information and adds it to the spreadsheet"""
+class ActionGetActiveAssignmetns(Action):
+
+    def name(self) -> Text:
+        print("Get assignments")
+        return "action_get_active_assignments"
+
+    def run(self,
+            dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]
+            ) -> List[Dict[Text, Any]]:
+
+        providerNumber = tracker.sender_id;
+        print(providerNumber)
+        print("Getting active assignments for provider: "+providerNumber)
+        dispatcher.utter_message("Fetching your assignments")
+
+        url = 'http://host.docker.internal:8089/getProviderInfo?providerNumber={providerNumber}'.format(providerNumber=providerNumber)
+
+        response = requests.get(url).text
+        assignments = json.loads(response)['assignments']
+
+        assignmentsStr = ""
+        for assignment in assignments:
+            assignmentsStr = assignmentsStr+assignment['assignmentName'] + ","
+
+        dispatcher.utter_message(assignmentsStr)
+        return []
+
+class SubmitTimeEntryInfo(FormAction):
 
     def name(self):
-        return "time_entry_form"
+        return "submit_time_entry_info"
 
     @staticmethod
-    def required_slots(tracker):
-        return [
-            "start",
-            "end",
-            "assignment"
-        ]
+    def required_slots(tracker: Tracker) -> List[Text]:
+        """A list of required slots that the form has to fill"""
+        return ["start", "end", "worksite"]
 
     def slot_mappings(self) -> Dict[Text, Union[Dict, List[Dict]]]:
         """A dictionary to map required slots to
@@ -48,13 +73,11 @@ class TimeEntryForm(FormAction):
             - intent: value pairs
             - a whole message
             or a list of them, where a first match will be picked"""
-
         return {
-            "assignment": self.from_entity(entity="assignment", intent=["inform"]),
-            "start": self.from_entity(entity="start", intent=["inform"]),
-            "end": self.from_entity(entity="end", intent=["inform"]),
-            "dates": self.from_entity(entity="dates", intent=["inform"])
-        }
+            "worksite": self.from_entity(entity="worksite", intent=["timeEntryInfo"]),
+            "start": self.from_entity(entity="start", intent=["timeEntryInfo"]),
+            "end": self.from_entity(entity="end", intent=["timeEntryInfo"])
+        };
 
     def submit(
             self,
@@ -62,8 +85,15 @@ class TimeEntryForm(FormAction):
             tracker: Tracker,
             domain: Dict[Text, Any],
     ) -> List[Dict]:
+        worksite = tracker.get_slot('worksite');
+        start = tracker.get_slot('start');
+        end = tracker.get_slot('end');
+        print(worksite)
+        print(start)
+        print(end)
 
-        dispatcher.utter_message(template="utter_time_entry_submit")
+        dispatcher.utter_message("Submitting time")
+        dispatcher.utter_message(template="utter_time_entry_summary")
         return []
 
 class ActionClearSlots(Action):
@@ -73,5 +103,5 @@ class ActionClearSlots(Action):
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-
+        print("Clearing all slots")
         return [AllSlotsReset()]

@@ -8,60 +8,71 @@ intents:
   - bot_challenge
   - capabilities
   - thank
-  - start
-  - time_entry_inform
-
-responses:
-  utter_greet:
-    - text: "Hello. I am Chappie"
-  utter_cheer_up:
-    - text: "Here is something to cheer you up:"
-      image: "https://i.imgur.com/nGF1K8f.jpg"
-  utter_did_that_help:
-    - text: "Did that help you?"
-  utter_happy:
-    - text: "I'm glad to help!"
-  utter_goodbye:
-    - text: "Goodbye"
-  utter_iamabot:
-    - text: "I am Chappie. I am a chat bot here to assist you"
-  utter_welcome:
-    - text: "You are very welcome!"
-  utter_capabilities:
-    - text: "I can chat with you, enter your time, or handle your documents"
-  utter_ask_start:
-    - text: When did you start?
-  utter_ask_end:
-    - text: When did you stop?
-  utter_ask_assignment:
-    - text: Where did you work?
-  utter_ask_dates:
-    - text: What days did you work?
-  utter_time_entry_summary:
-    - text: "So you worked from {start} to {end} at {assignment}. I'm submitting your time entry now. Thank you[timeentry.start:{start}][timeentry.end:{end}][timeentry.assignment:{assignment}]"
-
-session_config:
-  session_expiration_time: 60
-  carry_over_slots_to_new_session: true
-
-slots:
-  start:
-    type: unfeaturized
-  end:
-    type: unfeaturized
-  assignment:
-    type: unfeaturized
-  dates:
-    type: unfeaturized
-
-forms:
-  - time_entry_form
-
-actions:
-  - action_clear_slots
-
+  - fine_ask
+  - inform
+  - fine_normal
+  - timeEntryRequest
+  - timeEntryInfo:
+      use_entities: []
 entities:
   - start
   - end
-  - assignment
+  - worksite
   - dates
+slots:
+  worksite:
+    type: unfeaturized
+    auto_fill: false
+  dates:
+    type: unfeaturized
+    auto_fill: false
+  end:
+    type: unfeaturized
+    auto_fill: false
+  start:
+    type: unfeaturized
+    auto_fill: false
+responses:
+  utter_greet:
+    - text: Hello. I am Chappie
+  utter_cheer_up:
+    - image: https://i.imgur.com/nGF1K8f.jpg
+      text: 'Here is something to cheer you up:'
+  utter_did_that_help:
+    - text: Did that help you?
+  utter_happy:
+    - text: I'm glad to help!
+  utter_goodbye:
+    - text: Goodbye
+  utter_iamabot:
+    - text: I am Chappie. I am a chat bot here to assist you
+  utter_welcome:
+    - text: You are very welcome!
+  utter_capabilities:
+    - text: I can chat with you, enter your time, or handle your documents
+  utter_ask_time_entry_details:
+    - text: Please tell me the place your worked at, start time and end time.
+  utter_time_entry_summary:
+    - text: So you worked from {start} to {end} at {worksite}. I'm submitting your
+        time entry now. Thank you[timeentry.start:{start}][timeentry.end:{end}][timeentry.worksite:{worksite}]
+  utter_default:
+    - text: Sorry, I didn’t understand that.
+actions:
+  - utter_greet
+  - utter_cheer_up
+  - utter_did_that_help
+  - utter_happy
+  - utter_goodbye
+  - utter_iamabot
+  - utter_welcome
+  - utter_capabilities
+  - action_get_active_assignments
+  - utter_ask_assignment
+  - utter_time_entry_summary
+  - utter_default
+  - action_clear_slots
+forms:
+  - submit_time_entry_info
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true
