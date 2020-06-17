@@ -1,3 +1,6 @@
+## fallback
+- utter_default
+
 ## happy path
 * greet
   - utter_greet
@@ -38,10 +41,17 @@
 * thank
   - utter_welcome
 
-## time entry form
-* start
-    - time_entry_form                   <!--Run the time_entry_form action-->
-    - form{"name": "time_entry_form"}   <!--Activate the form-->
-    - form{"name": null}                <!--Deactivate the form-->
-    - utter_time_entry_summary
-    - action_clear_slots
+## timeEntryRequest
+* timeEntryRequest
+    - action_get_active_assignments
+    - utter_ask_time_entry_details
+
+## timeEntryInfo
+* timeEntryInfo
+    - submit_time_entry_info
+    - form{"name": "submit_time_entry_info"}
+    - slot{"requested_slot": "start"}
+    - slot{"requested_slot": "end"}
+    - slot{"requested_slot": "worksite"}
+* thank
+  - utter_welcome
