@@ -50,8 +50,11 @@
 * timeEntryInfo
     - submit_time_entry_info
     - form{"name": "submit_time_entry_info"}
+    - slot{"requested_slot": "dayOfWeek"}
     - slot{"requested_slot": "start"}
     - slot{"requested_slot": "end"}
     - slot{"requested_slot": "worksite"}
+    - slot{"requested_slot": "assignment"}
+    - form{"name": null}
 * thank
   - utter_welcome

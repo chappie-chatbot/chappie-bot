@@ -3,7 +3,9 @@
 #
 # See this guide on how to implement these action:
 # https://rasa.com/docs/rasa/core/actions/#custom-actions/
+import datetime
 import json
+import os
 from typing import Any, Text, Dict, List, Union
 
 import requests
@@ -41,11 +43,13 @@ class ActionGetActiveAssignmetns(Action):
             ) -> List[Dict[Text, Any]]:
 
         providerNumber = tracker.sender_id;
+        print(datetime.datetime.now())
         print(providerNumber)
         print("Getting active assignments for provider: "+providerNumber)
         dispatcher.utter_message("Fetching your assignments")
 
-        url = 'http://host.docker.internal:8089/getProviderInfo?providerNumber={providerNumber}'.format(providerNumber=providerNumber)
+        timeEntryHost = os.getenv('TIMEENTRY_HOST', "http://localhost:8089");
+        url = '{}/getProviderInfo?providerNumber={}'.format(timeEntryHost,providerNumber)
 
         response = requests.get(url).text
         assignments = json.loads(response)['assignments']
@@ -65,7 +69,7 @@ class SubmitTimeEntryInfo(FormAction):
     @staticmethod
     def required_slots(tracker: Tracker) -> List[Text]:
         """A list of required slots that the form has to fill"""
-        return ["start", "end", "worksite"]
+        return ["dayOfWeek", "start", "end", "worksite", "assignment"]
 
     def slot_mappings(self) -> Dict[Text, Union[Dict, List[Dict]]]:
         """A dictionary to map required slots to
@@ -76,7 +80,9 @@ class SubmitTimeEntryInfo(FormAction):
         return {
             "worksite": self.from_entity(entity="worksite", intent=["timeEntryInfo"]),
             "start": self.from_entity(entity="start", intent=["timeEntryInfo"]),
-            "end": self.from_entity(entity="end", intent=["timeEntryInfo"])
+            "end": self.from_entity(entity="end", intent=["timeEntryInfo"]),
+            "dayOfWeek": self.from_entity(entity="dayOfWeek", intent=["timeEntryInfo"]),
+            "assignment": self.from_entity(entity="assignment", intent=["timeEntryInfo"])
         };
 
     def submit(
@@ -85,15 +91,25 @@ class SubmitTimeEntryInfo(FormAction):
             tracker: Tracker,
             domain: Dict[Text, Any],
     ) -> List[Dict]:
+
+        dispatcher.utter_message("Processing time request")
         worksite = tracker.get_slot('worksite');
         start = tracker.get_slot('start');
         end = tracker.get_slot('end');
-        print(worksite)
-        print(start)
-        print(end)
+        dayOfWeek = tracker.get_slot('dayOfWeek');
+        assignment = tracker.get_slot('assignment');
+        print("worksite: " + worksite)
+        print("start: " + start)
+        print("end: " + end)
+        print("assignment: " + assignment)
+        print("dayOfWeek: " + dayOfWeek)
 
-        dispatcher.utter_message("Submitting time")
-        dispatcher.utter_message(template="utter_time_entry_summary")
+        if all(x is not None for x in [assignment, start, end, worksite, dayOfWeek]):
+            dispatcher.utter_message("Submitting time")
+            dispatcher.utter_message(template="utter_time_entry_summary")
+        else:
+            dispatcher.utter_message("Something went wrong, please try again later")
+
         return []
 
 class ActionClearSlots(Action):

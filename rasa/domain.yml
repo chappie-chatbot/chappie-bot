@@ -19,6 +19,8 @@ entities:
   - end
   - worksite
   - dates
+  - assignment
+  - dayOfWeek
 slots:
   worksite:
     type: unfeaturized
@@ -30,6 +32,12 @@ slots:
     type: unfeaturized
     auto_fill: false
   start:
+    type: unfeaturized
+    auto_fill: false
+  dayOfWeek:
+    type: unfeaturized
+    auto_fill: false
+  assignment:
     type: unfeaturized
     auto_fill: false
 responses:
@@ -51,9 +59,9 @@ responses:
   utter_capabilities:
     - text: I can chat with you, enter your time, or handle your documents
   utter_ask_time_entry_details:
-    - text: Please tell me the place your worked at, start time and end time.
+    - text: Please tell me the assignment, date, start time and end time.
   utter_time_entry_summary:
-    - text: So you worked from {start} to {end} at {worksite}. I'm submitting your
+    - text: So you worked at {worksite} from {start} to {end} on {dayOfWeek} for assignment {assignment}. I'm submitting your
         time entry now. Thank you[timeentry.start:{start}][timeentry.end:{end}][timeentry.worksite:{worksite}]
   utter_default:
     - text: Sorry, I didn’t understand that.
@@ -67,7 +75,6 @@ actions:
   - utter_welcome
   - utter_capabilities
   - action_get_active_assignments
-  - utter_ask_assignment
   - utter_time_entry_summary
   - utter_default
   - action_clear_slots
